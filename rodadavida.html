@@ -122,17 +122,6 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #1eaa50;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
-        }
-
         .btn-download {
             background: #FF9800;
             color: white;
@@ -268,7 +257,7 @@
 <body>
     <div class="container">
         <h1>🎯 Roda da Vida</h1>
-        <p class="subtitle">Avalie sua vida em 8 áreas e compartilhe no WhatsApp</p>
+        <p class="subtitle">Avalie sua vida em 8 áreas</p>
 
         <div class="alert" id="alert"></div>
 
@@ -326,9 +315,6 @@
             <button type="button" class="btn-generate" onclick="gerarRoda()">
                 📊 Gerar Roda
             </button>
-            <button type="button" class="btn-whatsapp" onclick="compartilharWhatsApp()">
-                📱 Compartilhar WhatsApp
-            </button>
             <button type="button" class="btn-download" onclick="baixarImagem()">
                 ⬇️ Baixar Imagem
             </button>
@@ -342,12 +328,6 @@
         </div>
 
         <div class="areas" id="areasContainer"></div>
-
-        <div class="media-input">
-            <label for="nome">Seu Nome (opcional para compartilhar):</label>
-            <input type="text" id="nome" placeholder="Digite seu nome...">
-        </div>
-    </div>
 
     <script>
         let chart = null;
