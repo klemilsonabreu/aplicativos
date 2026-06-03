@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roda da Vida</title>
+    <title>Roda da Vida - Compartilhe no WhatsApp</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -49,8 +49,15 @@
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 0.95em;
         }
 
         .form-grid {
@@ -72,19 +79,6 @@
             font-size: 0.95em;
         }
 
-        input {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         input[type="range"] {
             cursor: pointer;
             height: 6px;
@@ -95,6 +89,7 @@
             font-weight: bold;
             font-size: 1.1em;
             text-align: center;
+            margin-top: 5px;
         }
 
         .button-group {
@@ -102,16 +97,20 @@
             gap: 10px;
             justify-content: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border: none;
             border-radius: 8px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-generate {
@@ -122,6 +121,27 @@
         .btn-generate:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1eaa50;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-download {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #e68900;
+            transform: translateY(-2px);
         }
 
         .btn-reset {
@@ -135,8 +155,11 @@
 
         .chart-container {
             position: relative;
-            height: 400px;
+            height: 450px;
             margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
         }
 
         .areas {
@@ -154,6 +177,11 @@
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid #667eea;
+            transition: transform 0.3s;
+        }
+
+        .area-card:hover {
+            transform: translateY(-5px);
         }
 
         .area-name {
@@ -168,6 +196,48 @@
             font-weight: bold;
         }
 
+        .media-input {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .media-input label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .media-input input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -180,66 +250,92 @@
             .form-grid {
                 grid-template-columns: 1fr;
             }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .chart-container {
+                height: 350px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎯 Roda da Vida</h1>
-        
+        <p class="subtitle">Avalie sua vida em 8 áreas e compartilhe no WhatsApp</p>
+
+        <div class="alert" id="alert"></div>
+
         <form class="form-grid" id="rodaForm">
             <div class="form-group">
-                <label for="saude">Saúde</label>
-                <input type="range" id="saude" min="0" max="10" value="5">
-                <div class="value-display" id="saudeValue">5</div>
+                <label for="slider-saude">❤️ Saúde</label>
+                <input type="range" id="slider-saude" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-saude">5</div>
             </div>
 
             <div class="form-group">
-                <label for="carreira">Carreira</label>
-                <input type="range" id="carreira" min="0" max="10" value="5">
-                <div class="value-display" id="carreiraValue">5</div>
+                <label for="slider-carreira">💼 Carreira</label>
+                <input type="range" id="slider-carreira" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-carreira">5</div>
             </div>
 
             <div class="form-group">
-                <label for="financas">Finanças</label>
-                <input type="range" id="financas" min="0" max="10" value="5">
-                <div class="value-display" id="financasValue">5</div>
+                <label for="slider-financas">💰 Finanças</label>
+                <input type="range" id="slider-financas" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-financas">5</div>
             </div>
 
             <div class="form-group">
-                <label for="familia">Família</label>
-                <input type="range" id="familia" min="0" max="10" value="5">
-                <div class="value-display" id="familiaValue">5</div>
+                <label for="slider-familia">👨‍👩‍👧‍👦 Família</label>
+                <input type="range" id="slider-familia" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-familia">5</div>
             </div>
 
             <div class="form-group">
-                <label for="amizades">Amizades</label>
-                <input type="range" id="amizades" min="0" max="10" value="5">
-                <div class="value-display" id="amizadesValue">5</div>
+                <label for="slider-amizades">👥 Amizades</label>
+                <input type="range" id="slider-amizades" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-amizades">5</div>
             </div>
 
             <div class="form-group">
-                <label for="romance">Romance</label>
-                <input type="range" id="romance" min="0" max="10" value="5">
-                <div class="value-display" id="romanceValue">5</div>
+                <label for="slider-romance">💕 Romance</label>
+                <input type="range" id="slider-romance" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-romance">5</div>
             </div>
 
             <div class="form-group">
-                <label for="lazer">Lazer</label>
-                <input type="range" id="lazer" min="0" max="10" value="5">
-                <div class="value-display" id="lazerValue">5</div>
+                <label for="slider-lazer">🎮 Lazer</label>
+                <input type="range" id="slider-lazer" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-lazer">5</div>
             </div>
 
             <div class="form-group">
-                <label for="crescimento">Crescimento Pessoal</label>
-                <input type="range" id="crescimento" min="0" max="10" value="5">
-                <div class="value-display" id="crescimentoValue">5</div>
+                <label for="slider-crescimento">📚 Crescimento Pessoal</label>
+                <input type="range" id="slider-crescimento" class="slider-input" min="0" max="10" value="5">
+                <div class="value-display" id="valor-crescimento">5</div>
             </div>
         </form>
 
         <div class="button-group">
-            <button type="button" class="btn-generate" onclick="gerarRoda()">Gerar Roda</button>
-            <button type="button" class="btn-reset" onclick="resetarRoda()">Resetar</button>
+            <button type="button" class="btn-generate" onclick="gerarRoda()">
+                📊 Gerar Roda
+            </button>
+            <button type="button" class="btn-whatsapp" onclick="compartilharWhatsApp()">
+                📱 Compartilhar WhatsApp
+            </button>
+            <button type="button" class="btn-download" onclick="baixarImagem()">
+                ⬇️ Baixar Imagem
+            </button>
+            <button type="button" class="btn-reset" onclick="resetarRoda()">
+                🔄 Resetar
+            </button>
         </div>
 
         <div class="chart-container">
@@ -247,57 +343,52 @@
         </div>
 
         <div class="areas" id="areasContainer"></div>
+
+        <div class="media-input">
+            <label for="nome">Seu Nome (opcional para compartilhar):</label>
+            <input type="text" id="nome" placeholder="Digite seu nome...">
+        </div>
     </div>
 
     <script>
         let chart = null;
-        const areas = [
-            'Saúde',
-            'Carreira',
-            'Finanças',
-            'Família',
-            'Amizades',
-            'Romance',
-            'Lazer',
-            'Crescimento Pessoal'
-        ];
 
-        const cores = [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0',
-            '#9966FF',
-            '#FF9F40',
-            '#FF6384',
-            '#C9CBCF'
+        // ARRAY COM TODAS AS ÁREAS
+        const areas = [
+            { nome: 'Saúde', emoji: '❤️', sliderId: 'slider-saude', valorId: 'valor-saude', cor: '#FF6384' },
+            { nome: 'Carreira', emoji: '💼', sliderId: 'slider-carreira', valorId: 'valor-carreira', cor: '#36A2EB' },
+            { nome: 'Finanças', emoji: '💰', sliderId: 'slider-financas', valorId: 'valor-financas', cor: '#FFCE56' },
+            { nome: 'Família', emoji: '👨‍👩‍👧‍👦', sliderId: 'slider-familia', valorId: 'valor-familia', cor: '#4BC0C0' },
+            { nome: 'Amizades', emoji: '👥', sliderId: 'slider-amizades', valorId: 'valor-amizades', cor: '#9966FF' },
+            { nome: 'Romance', emoji: '💕', sliderId: 'slider-romance', valorId: 'valor-romance', cor: '#FF9F40' },
+            { nome: 'Lazer', emoji: '🎮', sliderId: 'slider-lazer', valorId: 'valor-lazer', cor: '#FF6384' },
+            { nome: 'Crescimento Pessoal', emoji: '📚', sliderId: 'slider-crescimento', valorId: 'valor-crescimento', cor: '#C9CBCF' }
         ];
 
         // Atualizar valores em tempo real
-        document.querySelectorAll('input[type="range"]').forEach(input => {
+        document.querySelectorAll('.slider-input').forEach(input => {
             input.addEventListener('input', function() {
-                const valueId = this.id + 'Value';
-                document.getElementById(valueId).textContent = this.value;
+                const area = areas.find(a => a.sliderId === this.id);
+                if (area) {
+                    document.getElementById(area.valorId).textContent = this.value;
+                }
             });
         });
 
+        // FUNÇÃO CORRIGIDA PARA OBTER VALORES
         function obterValores() {
             return areas.map(area => {
-                const id = area.toLowerCase()
-                    .replace('ç', 'c')
-                    .replace('á', 'a')
-                    .replace(' ', '');
-                
-                const elementos = document.querySelectorAll(`#${id}`);
-                if (elementos.length > 0) {
-                    return parseInt(elementos[0].value);
-                }
-                return 0;
+                const slider = document.getElementById(area.sliderId);
+                return slider ? parseInt(slider.value) : 0;
             });
         }
 
         function gerarRoda() {
             const valores = obterValores();
+            
+            console.log('Valores obtidos:', valores); // DEBUG
+            console.log('Áreas:', areas.map(a => a.nome));
+
             const ctx = document.getElementById('rodaCanvas').getContext('2d');
 
             if (chart) {
@@ -307,7 +398,7 @@
             chart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: areas,
+                    labels: areas.map(a => a.emoji + ' ' + a.nome),
                     datasets: [{
                         label: 'Minha Roda da Vida',
                         data: valores,
@@ -317,28 +408,15 @@
                         pointBackgroundColor: '#667eea',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 10,
-                            ticks: {
-                                stepSize: 2,
-                                font: {
-                                    size: 12
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
-                            }
-                        }
-                    },
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
                             position: 'top',
@@ -347,7 +425,38 @@
                                     size: 14,
                                     weight: 'bold'
                                 },
-                                padding: 20
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 12 }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 10,
+                            min: 0,
+                            ticks: {
+                                stepSize: 2,
+                                font: {
+                                    size: 11
+                                },
+                                callback: function(value) {
+                                    return value;
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)',
+                                drawBorder: true
+                            },
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)',
+                                lineWidth: 1
                             }
                         }
                     }
@@ -355,6 +464,7 @@
             });
 
             atualizarCards(valores);
+            mostrarAlerta('✅ Roda gerada com sucesso!', 'success');
         }
 
         function atualizarCards(valores) {
@@ -364,9 +474,9 @@
             areas.forEach((area, index) => {
                 const card = document.createElement('div');
                 card.className = 'area-card';
-                card.style.borderLeftColor = cores[index];
+                card.style.borderLeftColor = area.cor;
                 card.innerHTML = `
-                    <div class="area-name">${area}</div>
+                    <div class="area-name">${area.emoji} ${area.nome}</div>
                     <div class="area-score">${valores[index]}/10</div>
                 `;
                 container.appendChild(card);
@@ -374,10 +484,12 @@
         }
 
         function resetarRoda() {
-            document.querySelectorAll('input[type="range"]').forEach(input => {
-                input.value = 5;
-                const valueId = input.id + 'Value';
-                document.getElementById(valueId).textContent = '5';
+            areas.forEach(area => {
+                const slider = document.getElementById(area.sliderId);
+                if (slider) {
+                    slider.value = 5;
+                    document.getElementById(area.valorId).textContent = '5';
+                }
             });
 
             if (chart) {
@@ -386,6 +498,60 @@
             }
 
             document.getElementById('areasContainer').innerHTML = '';
+            document.getElementById('nome').value = '';
+            mostrarAlerta('🔄 Roda resetada!', 'success');
+        }
+
+        function mostrarAlerta(mensagem, tipo) {
+            const alert = document.getElementById('alert');
+            alert.textContent = mensagem;
+            alert.className = `alert ${tipo} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
+
+        function compartilharWhatsApp() {
+            if (!chart) {
+                mostrarAlerta('❌ Gere a roda primeiro!', 'error');
+                return;
+            }
+
+            const valores = obterValores();
+            const nome = document.getElementById('nome').value || 'Eu';
+            
+            const media = `${nome} compartilhou sua Roda da Vida:`;
+
+            const scores = areas.map((area, i) => 
+                `${area.emoji} ${area.nome}: ${valores[i]}/10`
+            ).join('\n');
+
+            const mensagem_completa = `${media}\n\n${scores}\n\n🎯 Crie sua própria Roda da Vida!`;
+
+            const mensagem_encoded = encodeURIComponent(mensagem_completa);
+            const whatsappUrl = `https://wa.me/?text=${mensagem_encoded}`;
+            
+            window.open(whatsappUrl, '_blank');
+            mostrarAlerta('✅ Abrindo WhatsApp...', 'success');
+        }
+
+        function baixarImagem() {
+            if (!chart) {
+                mostrarAlerta('❌ Gere a roda primeiro!', 'error');
+                return;
+            }
+
+            try {
+                const canvas = document.getElementById('rodaCanvas');
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `roda-da-vida-${new Date().getTime()}.png`;
+                link.click();
+                mostrarAlerta('✅ Imagem baixada com sucesso!', 'success');
+            } catch (error) {
+                mostrarAlerta('❌ Erro ao baixar imagem', 'error');
+                console.error(error);
+            }
         }
 
         // Gerar gráfico automaticamente ao carregar
