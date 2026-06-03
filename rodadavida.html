@@ -286,7 +286,7 @@
             </div>
 
             <div class="form-group">
-                <label for="slider-Vidaespiritual">💰 Vida espiritual</label>
+                <label for="slider-Vidaespiritual">📒 Vida espiritual</label>
                 <input type="range" id="slider-Vidaespiritual" class="slider-input" min="0" max="10" value="5">
                 <div class="value-display" id="valor-Vidaespiritual">5</div>
             </div>
@@ -356,7 +356,7 @@
         const areas = [
             { nome: 'Saúde', emoji: '❤️', sliderId: 'slider-saude', valorId: 'valor-saude', cor: '#FF6384' },
             { nome: 'Trabalho', emoji: '💼', sliderId: 'slider-Trabalho', valorId: 'valor-Trabalho', cor: '#36A2EB' },
-            { nome: 'Vida espiritual', emoji: '💰', sliderId: 'slider-Vida espiritual', valorId: 'valor-Vida espiritual', cor: '#FFCE56' },
+            { nome: 'Vida espiritual', emoji: '📒', sliderId: 'slider-Vida espiritual', valorId: 'valor-Vida espiritual', cor: '#FFCE56' },
             { nome: 'Família', emoji: '👨‍👩‍👧‍👦', sliderId: 'slider-familia', valorId: 'valor-familia', cor: '#4BC0C0' },
             { nome: 'Amizades', emoji: '👥', sliderId: 'slider-amizades', valorId: 'valor-amizades', cor: '#9966FF' },
             { nome: 'Romance', emoji: '💕', sliderId: 'slider-romance', valorId: 'valor-romance', cor: '#FF9F40' },
@@ -508,49 +508,6 @@
             setTimeout(() => {
                 alert.classList.remove('show');
             }, 3000);
-        }
-
-        function compartilharWhatsApp() {
-            if (!chart) {
-                mostrarAlerta('❌ Gere a roda primeiro!', 'error');
-                return;
-            }
-
-            const valores = obterValores();
-            const nome = document.getElementById('nome').value || 'Eu';
-            
-            const media = `${nome} compartilhou sua Roda da Vida:`;
-
-            const scores = areas.map((area, i) => 
-                `${area.emoji} ${area.nome}: ${valores[i]}/10`
-            ).join('\n');
-
-            const mensagem_completa = `${media}\n\n${scores}\n\n🎯 Crie sua própria Roda da Vida!`;
-
-            const mensagem_encoded = encodeURIComponent(mensagem_completa);
-            const whatsappUrl = `https://wa.me/?text=${mensagem_encoded}`;
-            
-            window.open(whatsappUrl, '_blank');
-            mostrarAlerta('✅ Abrindo WhatsApp...', 'success');
-        }
-
-        function baixarImagem() {
-            if (!chart) {
-                mostrarAlerta('❌ Gere a roda primeiro!', 'error');
-                return;
-            }
-
-            try {
-                const canvas = document.getElementById('rodaCanvas');
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = `roda-da-vida-${new Date().getTime()}.png`;
-                link.click();
-                mostrarAlerta('✅ Imagem baixada com sucesso!', 'success');
-            } catch (error) {
-                mostrarAlerta('❌ Erro ao baixar imagem', 'error');
-                console.error(error);
-            }
         }
 
         // Gerar gráfico automaticamente ao carregar
